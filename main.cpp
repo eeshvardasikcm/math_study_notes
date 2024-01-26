@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-#include <utility>
 #include <vector>
 #ifdef VARIABLE_INCLUDE_standard
 #include "standard.h"
@@ -10,8 +9,12 @@
 #endif
 using namespace std;
 namespace class_10_od {
-    struct _menu_runnable {
+    struct _menu_control {
         string name;
+        static const int EXIT_PROGRAM;
+        int control=EXIT_PROGRAM;
+    };const int _menu_control::EXIT_PROGRAM=EXIT_SUCCESS;
+    struct _menu_runnable : _menu_control {
         virtual void inputVariables() {};
         void runFromMenu() {
             inputVariables();
@@ -89,8 +92,8 @@ namespace class_10_od {
             return sin(n*x);
         }
         void inputVariables() override {
-            cout << "sin n*x" << endl;
-            cout << "n: ";
+            cout << "sin _n*x" << endl;
+            cout << "_n: ";
             float n;
             cin >> n; cin.ignore();
             cout << "x: ";
@@ -105,32 +108,127 @@ namespace class_10_od {
     struct _menu {
     private:
         struct _item {
+            _item(nullptr_t pVoid) {
+
+            }
+
+        private:
+            _menu_control* pMc;
+        public:
             _menu_runnable* pMr;
+            explicit _item(_menu_runnable* pMenuRunnable):pMr(pMenuRunnable) {
+               pMc=nullptr;
+            };
+            explicit _item(_menu_control* pMenuControl):pMc(pMenuControl){
+                pMr= nullptr;
+            };
+            [[nodiscard]] _menu_control * getPMc() const {return pMc;}
         };
         vector<_item> menuItems;
-        struct _n_item {
-            int n;
-            _item item;
+        struct _n_menu_item_showing {
+        public:
+            int _n;
+            _item item = _item(nullptr);
+            _n_menu_item_showing(int n, _menu_control* pMc): _n(n) {
+                item=_item(pMc);
+            };
         };
-        vector<_n_item> nItems;
+        vector<_n_menu_item_showing> nMenuItemsShowing;
+        void _printItem(
+                _menu_runnable* pMenuRunnable=nullptr,
+                _menu_control* pMenuControl=nullptr) {
+            if (nullptr==pMenuRunnable) {
+                if (nullptr==pMenuControl) {
+                    throw logic_error("Only one object pointer can be nullptr. ");
+                } else {
+                    bool contains=false;
+                    int n;
+                    for (_item mc : menuItems) {
+                        if (mc.getPMc()==pMenuControl) {
+                            contains=true;
+
+                        }
+                    }
+                    if (contains) {
+
+                    } else {
+                        nMenuItemsShowing.emplace_back(_n_menu_item_showing(menuItems.size() + 1, pMenuControl));
+                    }
+                    cout << *pI << ") ";
+                    cout << pMenuControl->name << endl;
+                }
+            } else {
+                bool contains=false;
+                for (_item mr : menuItems) {
+                    if (mr.pMr==pMenuRunnable) {
+                        contains=true;
+                    }
+                }
+                if (contains) {
+
+                } else {
+                    nMenuItemsShowing.emplace_back(_n_menu_item_showing{*pI, _item(pMenuRunnable)});
+                }
+                cout << *pI << ") ";
+                cout << pMenuRunnable->name << endl;
+            }
+        }
+        void _printItem(_menu_control* pMenuControl) {
+            _printItem(nullptr, pMenuControl);
+        }
+        void showItem(_menu_runnable* pMenuRunnable) {
+            _printItem(pMenuRunnable);
+        }
+        void showItem(_menu_control* pMenuControl) {
+            _printItem(pMenuControl);
+        }
+        using _exit_program = _menu_control;
     public:
-        void add_item(_menu_runnable* pMenuRunnable, const string& name) {
+        void add_exit_item() {
+            _exit_program menuControl;
+            menuControl.control=_menu_control::EXIT_PROGRAM;
+            menuControl.name="exit";
+            menuItems.emplace_back(_item(&menuControl));
+        }
+        void add_item(
+                _menu_runnable* pMenuRunnable,
+                const string& name,
+                int _control_option = _menu_control::EXIT_PROGRAM) {
+            pMenuRunnable->control=_control_option;
             pMenuRunnable->name=name;
-            menuItems.emplace_back(_item{pMenuRunnable});
+            menuItems.emplace_back(_item(pMenuRunnable));
         }
         void show() {
-            cout << endl;
-            int i=1;
-            for (const _item& one_menu_item : menuItems) {
-                cout << i << ") ";
-                nItems.emplace_back(_n_item{i++, one_menu_item});
-                cout << one_menu_item.pMr->name << endl;
-            };
-            cout << "Class 10(OD) menu: ";
-            int selection;
-            cin >> selection; cin.ignore();
-            for (_n_item nI : nItems) {
-                if(nI.n==selection) nI.item.pMr->runFromMenu();
+            bool continueRunning = true;
+            while (continueRunning) {
+                cout << endl;
+                for (const _item &one_menu_item: menuItems) {
+                    if (nullptr==one_menu_item.pMr) {
+                        showItem(one_menu_item.getPMc());
+                    } else {
+                        showItem(one_menu_item.pMr);
+                    }
+                }
+                for (const _n_menu_item_showing &one_menu_n_item: nMenuItemsShowing) {
+                    if (nullptr==one_menu_n_item.item.pMr) {
+                        showItem(one_menu_n_item);
+                    } else {
+                        showItem(one_menu_n_item);
+                    }
+                }
+                cout << "Class 10(OD) menu: ";
+                int selection;
+                cin >> selection; cin.ignore();
+                for (_n_menu_item_showing nI: nMenuItemsShowing) {
+                    if (nI._n == selection) {
+                        if (nullptr == nI.item.pMr) {
+                            continueRunning = false;
+                        } else {
+                            nI.item.pMr->runFromMenu();
+                            continueRunning = true;
+                        }
+                    }
+                }
             }
         };
     };
@@ -143,6 +241,7 @@ int main() {
     class_10_od::_menu menu;
     menu.add_item(&velocity, "velocity");
     menu.add_item(&trigSin, "trigonometry sin");
+    menu.add_exit_item();
     menu.show();
     return 0;
 }
