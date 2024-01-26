@@ -1,4 +1,4 @@
-# khan_academy_math_study_notes (beta) 0.2.0.0
+# khan_academy_math_study_notes (beta) 0.2.0
 <p>This C++ repository has some code I wrote during my studies of the Khan Academy Class 10(OD) course.
 Some of the material covered in this course will certainly help my C++ templates, and also help me score higher on my <a href="https://www.codingame.com/profile/70a154e089698866b393f458447036523367585">EeshvarDasIKCM Codingame profile</a>.
 This C++ CMake project uses C++17, and should not include any code from C++20 or newer for some time.</p>
