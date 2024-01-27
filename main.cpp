@@ -2,147 +2,188 @@
 #include <cmath>
 #include <utility>
 #include <vector>
+#include <cstdint>
 #ifdef VARIABLE_INCLUDE_standard
 #include "standard.h"
 #endif
 #ifdef VARIABLE_INLUCDE_experimental
 #include "experimental.h"
 #endif
-using namespace std;
-namespace class_10_od {
-    struct _menu_runnable {
-        string name;
+namespace class10Od {
+    struct menuControl {
+    };
+
+    struct menuRunnable : menuControl {
         virtual void inputVariables() {};
         void runFromMenu() {
             inputVariables();
         };
     };
 
-    struct _point {
-        float x, y;
-        [[nodiscard]] string printV() const {
-            string s="(";
-            s.append(to_string(x));
-            s.append(", ");
-            s.append(to_string(y));
-            s.append(") ");
-            return s;
-        }
+    struct point {
+        float x;
+        float y;
     };
 
-    struct _line {
-        _point A, B;
+    struct line {
     };
 
-    struct _unit_of_measure {
-        static const string _km;
-        static const string _hr;
-        static string _km_per_h() {
-            string s=" ";
-            s.append(_km);
-            s.append("/");
-            s.append(_unit_of_measure::_hr);
-            s.append(" ");
+    struct unitOfMeasure {
+        static const std::string km;
+        static const std::string hr;
+        static std::string kmPerH() {
+            std::string s=std::string(" ")
+                    .append(km)
+                    .append("/")
+                    .append(unitOfMeasure::hr)
+                    .append(" ");
             return s;
         };
     };
-    const string _unit_of_measure::_km = "km";
-    const string _unit_of_measure::_hr = "hour";
+    const std::string unitOfMeasure::km = "km";
+    const std::string unitOfMeasure::hr = "hour";
 
-    struct _speed : _menu_runnable {
-        float v=0;
+    struct speed : menuRunnable {private:
+        float v=static_cast<float>(0);
         void calculate(float kilometers, float hours) {
             v = kilometers / hours;
         };
-        [[nodiscard]] string getV() const {
-            string s=to_string(v);
-            s.append(_unit_of_measure::_km_per_h());
+        [[nodiscard]] std::string getV() const {
+            std::string s=std::to_string(v)
+                    .append(unitOfMeasure::kmPerH());
             return s;
         };
-        void inputVariables() override {
-            cout << "distance(" << _unit_of_measure::_km << "): ";
+        void inputVariables() override  {
+            std::cout << "distance(" << unitOfMeasure::km << "): ";
             float d;
-            cin >> d; cin.ignore();
-            cout << "time(" << _unit_of_measure::_hr << "): ";
+            std::cin >> d; (void)std::cin.ignore();
+            std::cout << "time(" << unitOfMeasure::hr << "): ";
             float t;
-            cin >> t; cin.ignore();
+            std::cin >> t; (void)std::cin.ignore();
             calculate(d,t);
-            cout << getV() << endl;
+            std::cout << getV() << std::endl;
         }
     };
 
-    struct _line_formula {
-        float Ax, Ay, Bx, By;
+    struct lineFormula {
 #ifdef VARIABLE_INLUCDE_experimental
-        _point _equation_1(float x, float y, float xn=11, float yn=65) {
-            return _point((float _f1(*(x)))*(xn), (float _f2(*(y)))*(yn));
+        point _equation_1(float x, float y, float xn=11, float yn=65) {
+            return point((float _f1(*(x)))*(xn), (float _f2(*(y)))*(yn));
         }
 
-        _point intersect(_line l1, _line_formula l2) {
+        point intersect(line l1, lineFormula l2) {
 
         }
 #endif
     };
 
-    struct _sin : _menu_runnable {
-        static float nx(float n, float x) {
+    struct trigSin : menuRunnable {
+        static double nx(double n, double x) {
             return sin(n*x);
         }
         void inputVariables() override {
-            cout << "sin n*x" << endl;
-            cout << "n: ";
+            std::cout << "sin n*x" << std::endl;
+            std::cout << "n: ";
             float n;
-            cin >> n; cin.ignore();
-            cout << "x: ";
+            std::cin >> n; (void)std::cin.ignore();
+            std::cout << "x: ";
             float x;
-            cin >> x; cin.ignore();
-            cout << "sin " << n << "x, ";
-            cout << "where x=" << x << " is equal to: ";
-            cout << nx(n,x) << endl;
+            std::cin >> x; (void)std::cin.ignore();
+            std::cout << "sin " << n << "x, ";
+            std::cout << "where x=" << x << " is equal to: ";
+            std::cout << nx(n,x) << std::endl;
         };
     };
 
-    struct _menu {
+    struct menu {
     private:
-        struct _item {
-            _menu_runnable* pMr;
-        };
-        vector<_item> menuItems;
-        struct _n_item {
+        struct menuItem {
+        private:
             int n;
-            _item item;
+            std::string name;
+            menuControl* pMc;
+            menuRunnable* pMr;
+        public:
+            static int totalCreated;
+            explicit menuItem(std::string name, menuRunnable* pMenuRunnable):
+            pMr(pMenuRunnable), name(std::move(name)) {
+               pMc=nullptr;
+               totalCreated++;
+               n=totalCreated;
+            };
+            explicit menuItem(std::string name, menuControl* pMenuControl):
+            pMc(pMenuControl), name(std::move(name)) {
+                pMr= nullptr;
+                totalCreated++;
+                n=totalCreated;
+            };
+            [[nodiscard]] menuControl * getPMc() const {return pMc;}
+            [[nodiscard]] menuRunnable * getPMr() const {return pMr;}
+            [[nodiscard]] int getN() const {return n;}
+            [[nodiscard]] std::string getName() {return name;}
         };
-        vector<_n_item> nItems;
+        std::vector<menuItem> menuItems;
+        std::vector<menuItem> nMenuItemsShowing;
+        static void drawItemOnMenu(menuItem shownMenuItem) {
+            int n = shownMenuItem.getN();
+            std::cout << n << ") ";
+            std::cout << shownMenuItem.getName() << std::endl;
+        }
     public:
-        void add_item(_menu_runnable* pMenuRunnable, const string& name) {
-            pMenuRunnable->name=name;
-            menuItems.emplace_back(_item{pMenuRunnable});
+        void addExitItem() {
+            menuControl mc;
+            menuItem newItem("exit", &mc);
+            menuItem shownMenuItem = nMenuItemsShowing.emplace_back(newItem);
+            if (shownMenuItem.getPMc() != &mc) {
+                throw std::logic_error("control style menu item was "
+                                       "not added to the list of"
+                                       "created menu items properly.");
+            }
+        }
+        void addItem(menuRunnable *pMenuRunnable, const std::string &name) {
+            menuItem newItem(name, pMenuRunnable);
+            menuItem shownMenuItem = nMenuItemsShowing.emplace_back(newItem);
+            if (shownMenuItem.getPMr()!=pMenuRunnable) {
+                throw std::logic_error("runnable style menu item was "
+                                       "not added to the list of"
+                                       "created menu items properly.");
+            }
         }
         void show() {
-            cout << endl;
-            int i=1;
-            for (const _item& one_menu_item : menuItems) {
-                cout << i << ") ";
-                nItems.emplace_back(_n_item{i++, one_menu_item});
-                cout << one_menu_item.pMr->name << endl;
-            };
-            cout << "Class 10(OD) menu: ";
-            int selection;
-            cin >> selection; cin.ignore();
-            for (_n_item nI : nItems) {
-                if(nI.n==selection) nI.item.pMr->runFromMenu();
+            bool continueRunning = true;
+            while (continueRunning) {
+                std::cout << std::endl;
+                for (const menuItem& oneMenuItem: nMenuItemsShowing) {
+                    drawItemOnMenu(oneMenuItem);
+                }
+                std::cout << "Class 10(OD) menu: ";
+                int selection;
+                std::cin >> selection; (void)std::cin.ignore();
+                for (const menuItem& nI: nMenuItemsShowing) {
+                    if (nI.getN() == selection) {
+                        if (nullptr == nI.getPMr()) {
+                            continueRunning = false;
+                        } else {
+                            nI.getPMr()->runFromMenu();
+                            continueRunning = true;
+                        }
+                    }
+                }
             }
         };
     };
+    int menu::menuItem::totalCreated=0;
 }
-using namespace class_10_od;
+
+
 int main() {
     std::cout << "khan_academy_math_study_notes (beta)" << std::endl;
-    class_10_od::_speed velocity;
-    class_10_od::_sin trigSin;
-    class_10_od::_menu menu;
-    menu.add_item(&velocity, "velocity");
-    menu.add_item(&trigSin, "trigonometry sin");
+    class10Od::speed velocity;
+    class10Od::trigSin trigSin;
+    class10Od::menu menu;
+    menu.addItem(&velocity, "velocity");
+    menu.addItem(&trigSin, "trigonometry sin");
+    menu.addExitItem();
     menu.show();
     return 0;
 }
