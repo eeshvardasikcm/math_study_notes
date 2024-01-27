@@ -29,6 +29,9 @@ namespace class10Od {
     };
 
     struct unitOfMeasure {
+    private:
+        std::char_traits<char> ;
+    public:
         static const std::string km;
         static const std::string hr;
         static std::string kmPerH() {
