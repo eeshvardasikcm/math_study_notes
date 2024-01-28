@@ -13,4 +13,8 @@ Finishing my BS in Computer Science would be a major accomplishment for me and I
 
 ## command line menu <b>enhancement</b>
 - add a quit option to allow menu to repeat again after one selection.
-- maybe more...
+- [open for discussion](https://github.com/eeshvardasikcm/khan_academy_math_study_notes/discussions/5#discussion-6139780)
+  - minor version 0.3 and 0.4
+- based from this one [previous discussion topic](https://github.com/eeshvardasikcm/khan_academy_math_study_notes/discussions/5#discussion-6139780) posted: 
+  - <b><i>cos 2x</b></i> will likely be menu item 12, or 2 on a separate trig menu;  
+  - <b><i>cos 3x</b></i> will likely be menu item 12, or 3 on the separate menu;  
