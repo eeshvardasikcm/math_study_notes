@@ -3,7 +3,6 @@
 #include <utility>
 #include <vector>
 #include <cstdint>
-
 #ifdef VARIABLE_INCLUDE_standard
 #include "standard.h"
 #endif
@@ -20,11 +19,7 @@ namespace class10Od {
             inputVariables();
         };
     };
-    struct menuItemType {
-    public:
-        static const std::uint8_t controlType = 101U;
-        static const std::uint8_t runnableType = 102U;
-    };
+
     struct point {
         float x;
         float y;
@@ -34,15 +29,13 @@ namespace class10Od {
     };
 
     struct unitOfMeasure {
+    private:
+    public:
         static const std::string km;
         static const std::string hr;
         static std::string kmPerH() {
-            std::string s=std::string(" ")
-                    .append(km)
-                    .append("/")
-                    .append(unitOfMeasure::hr)
-                    .append(" ");
-            return s;
+            std::basic_string bs = " " + km + "/" + unitOfMeasure::hr + " ";
+            return bs;
         };
     };
     const std::string unitOfMeasure::km = "km";
@@ -111,13 +104,13 @@ namespace class10Od {
         public:
             static int totalCreated;
             explicit menuItem(std::string name, menuRunnable* pMenuRunnable):
-            pMr(pMenuRunnable), name(name) {
+            pMr(pMenuRunnable), name(std::move(name)) {
                pMc=nullptr;
                totalCreated++;
                n=totalCreated;
             };
             explicit menuItem(std::string name, menuControl* pMenuControl):
-            pMc(pMenuControl), name(name) {
+            pMc(pMenuControl), name(std::move(name)) {
                 pMr= nullptr;
                 totalCreated++;
                 n=totalCreated;
@@ -128,25 +121,6 @@ namespace class10Od {
             [[nodiscard]] std::string getName() {return name;}
         };
         std::vector<menuItem> menuItems;
-        struct indexedShownMenuItem {
-        private:
-            menuItem* pItem;
-        public:
-            [[nodiscard]] int getN() const {
-                int retN;
-                if (pItem->getPMr()== nullptr) {
-                    if (pItem->getPMc()== nullptr) {
-                        throw std::logic_error("indexed menu item not built properly.");
-                    } else {
-                        retN = pItem->getN();
-                    }
-                } else {
-                    retN = pItem->getN();
-                }
-                return retN;
-            }
-            [[nodiscard]] menuItem* getPItem() const{return pItem;}
-        };
         std::vector<menuItem> nMenuItemsShowing;
         static void drawItemOnMenu(menuItem shownMenuItem) {
             int n = shownMenuItem.getN();
@@ -177,13 +151,13 @@ namespace class10Od {
             bool continueRunning = true;
             while (continueRunning) {
                 std::cout << std::endl;
-                for (menuItem oneMenuItem: nMenuItemsShowing) {
+                for (const menuItem& oneMenuItem: nMenuItemsShowing) {
                     drawItemOnMenu(oneMenuItem);
                 }
                 std::cout << "Class 10(OD) menu: ";
                 int selection;
                 std::cin >> selection; (void)std::cin.ignore();
-                for (menuItem nI: nMenuItemsShowing) {
+                for (const menuItem& nI: nMenuItemsShowing) {
                     if (nI.getN() == selection) {
                         if (nullptr == nI.getPMr()) {
                             continueRunning = false;
@@ -196,8 +170,9 @@ namespace class10Od {
             }
         };
     };
+    int menu::menuItem::totalCreated=0;
 }
-int class10Od::menu::menuItem::totalCreated=0;
+
 
 int main() {
     std::cout << "khan_academy_math_study_notes (beta)" << std::endl;
