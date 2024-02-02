@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25.1...3.28.1)
-project(khan_academy_math_study_notes VERSION 0.2.0.2)
+project(khan_academy_math_study_notes VERSION 0.2.1.4)
 set(CMAKE_MAKE_PROGRAM "ninja")
 
 set(CMAKE_CXX_STANDARD 17)

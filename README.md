@@ -11,7 +11,7 @@ This course is extremely interesting to me.</p>
 It will be nice to catch up on some geometry and trigonometry during this course.
 Finishing my BS in Computer Science would be a major accomplishment for me and I am excited that Khan Academy offers this Class 10(OD) course in mathematics.</p>
 
-## command line menu <b>enhancement</b>
+## command line menu <b>enhancement</b> for 0.2.0
 - add a quit option to allow menu to repeat again after one selection.
 - [open for discussion](https://github.com/eeshvardasikcm/khan_academy_math_study_notes/discussions/5#discussion-6139780)
   - minor version 0.3 and 0.4
@@ -23,3 +23,8 @@ Finishing my BS in Computer Science would be a major accomplishment for me and I
 <p>Researching [Class (set theory)](https://en.wikipedia.org/wiki/Class_(set_theory)), led me to become slightly aware of its uses in mathematics.
 The C++17 library does appear to contain sufficient classes that can help to approach the some of the calculations that are necessary for solving some problems on my Khana Acadamy Class 10 (OD) course.
 These math study notes of mine are a combined effort to advance my education, and to improve my skills in coding C++.</p>
+
+### patch 1
+<p>patch will introduce some new device capabilities that will not affect user features.
+These new device capabilities are a necessary part of bringing these study notes up to date with Math Class 9 (OD) mathematics.
+The intent is to make changes to only the measurement unit part of the code to avoid disrupting the current working minor version.</p> 

@@ -29,15 +29,13 @@ namespace class10Od {
     };
 
     struct unitOfMeasure {
+    private:
+    public:
         static const std::string km;
         static const std::string hr;
         static std::string kmPerH() {
-            std::string s=std::string(" ")
-                    .append(km)
-                    .append("/")
-                    .append(unitOfMeasure::hr)
-                    .append(" ");
-            return s;
+            std::basic_string bs = " " + km + "/" + unitOfMeasure::hr + " ";
+            return bs;
         };
     };
     const std::string unitOfMeasure::km = "km";
