@@ -9,7 +9,7 @@
 #ifdef VARIABLE_INLUCDE_experimental
 #include "experimental.h"
 #endif
-namespace class10Od {
+namespace study_notes {
     struct menuControl {
     };
 
@@ -154,7 +154,7 @@ namespace class10Od {
                 for (const menuItem& oneMenuItem: nMenuItemsShowing) {
                     drawItemOnMenu(oneMenuItem);
                 }
-                std::cout << "Class 10(OD) menu: ";
+                std::cout << "study notes menu: ";
                 int selection;
                 std::cin >> selection; (void)std::cin.ignore();
                 for (const menuItem& nI: nMenuItemsShowing) {
@@ -176,9 +176,9 @@ namespace class10Od {
 
 int main() {
     std::cout << "khan_academy_math_study_notes (beta)" << std::endl;
-    class10Od::speed velocity;
-    class10Od::trigSin trigSin;
-    class10Od::menu menu;
+    study_notes::speed velocity;
+    study_notes::trigSin trigSin;
+    study_notes::menu menu;
     menu.addItem(&velocity, "velocity");
     menu.addItem(&trigSin, "trigonometry sin");
     menu.addExitItem();
